@@ -120,6 +120,7 @@ public class TP01 {
                         break;
                     }
                 }
+            System.out.println("Update nih");
             }
         }
         scanner.close();
