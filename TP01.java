@@ -27,25 +27,28 @@ public class TP01 {
         double hargaBarang = scanner.nextDouble();
         System.out.print("Masukkan saldo awal: ");
         double saldo = scanner.nextDouble();
+        boolean running = true;
 
-        while (true){
+        while (running){
             System.out.println("\nPilih menu\n" + //
                             "1. Penjual\n" + //
                             "2. Pembeli\n" + //
                             "3. Hari Selanjutnya\n" + //
-                            "4. Keluar");
+                            "4. Keluar\n");
             System.out.print("Perintah : ");
             int perintah = scanner.nextInt();
             
-            if (perintah == 4) {
+            switch(perintah){
+            case 4:
                 System.out.println("\n===========================================");
                 System.out.println("Terima kasih telah menggunakan Burhanpedia!");
                 System.out.println("===========================================\n");
+                running = false;
                 break;
-            }
-
-            if (perintah == 1){
-                while (true) {
+            
+            case 1: //Menu Penjual
+                boolean penjual = true;
+                while (penjual) {
                     System.out.println("\n===== MENU PENJUAL =====\n" + //
                                         "1. Cek Stok\n" + //
                                         "2. Cek Harga Barang\n" + //
@@ -58,35 +61,47 @@ public class TP01 {
                     System.out.print("\nPerintah : ");
                     int menuPenjual = scanner.nextInt();
 
-                    if (menuPenjual == 1) {
+                    switch(menuPenjual) {
+                    case 1:
                         System.out.println ("==============================");
                         System.out.println("Stok saat ini: " + stok);
                         System.out.println("==============================");
-                    }
-                    else if(menuPenjual == 2) {
+                        break;
+                    
+                    case 2:
                         System.out.println("==============================");
                         System.out.println("Harga barang saat ini : " + hargaBarang);
                         System.out.println("==============================");
-                    }
-                    else if(menuPenjual == 3) {
+                        break;
+                    
+                    case 3:
                         System.out.print("Masukkan jumlah stok yang ingin ditambah: ");
                         int stokTambah = scanner.nextInt();
                         stok += stokTambah;
                         System.out.println("Stok berhasil ditambah! Stok saat ini: " + stok);
-                    }
-                    else if(menuPenjual == 4) {
+                        break;
+                    
+                    case 4:
                         System.out.print("Masukkan harga barang yang baru: ");
                         double hargaBaru = scanner.nextDouble();
                         hargaBarang = hargaBaru;
                         System.out.println("Harga barang diperbarui: " + hargaBarang);
-                    }
-                    else if(menuPenjual == 8){
+                        break;
+                
+                    case 8:
+                        penjual = false;
                         break ;
+                    
+                    default:
+                        System.out.println("Pilihan tidak valid.");
+                        break;
                     }
                 }
-            }
-            else if(perintah==2) {
-                while (true){
+                break;
+            
+            case 2: //Menu Pembeli
+                boolean pembeli = true;
+                while (pembeli){
                     System.out.println("\n===== MENU PEMBELI =====\n" + //
                     "1. Cek Saldo\n" + //
                     "2. Top Up Saldo\n" + //
@@ -100,27 +115,68 @@ public class TP01 {
                     System.out.print("\nPerintah : ");
                     int menuPembeli = scanner.nextInt();
 
-                    if (menuPembeli == 1){
-                        System.out.println("==============================");
-                        System.out.println("Saldo saat ini:" + saldo);
-                        System.out.println("==============================");
-                    }
-                    else if(menuPembeli == 2){
-                        System.out.print("Masukkan jumlah saldo yang ingin ditambah: ");
-                        double saldoTambah = scanner.nextDouble();
-                        saldo += saldoTambah;
-                        System.out.println("Saldo berhasil ditambah! Saldo saat ini: " + saldo);
-                    }
-                    else if(menuPembeli == 3){
-                        System.out.println("==============================");
-                        System.out.println("Harga barang saat ini: " + hargaBarang);
-                        System.out.println("==============================");
-                    }
-                    else if(menuPembeli == 8){
-                        break;
+                    switch (menuPembeli) {
+                        case 1:
+                            System.out.println("==============================");
+                            System.out.println("Saldo saat ini:" + saldo);
+                            System.out.println("==============================");
+                            break;
+                        
+                        case 2:
+                            System.out.print("Masukkan jumlah saldo yang ingin ditambah: ");
+                            double saldoTambah = scanner.nextDouble();
+                            saldo += saldoTambah;
+                            System.out.println("Saldo berhasil ditambah! Saldo saat ini: " + saldo);
+                            break;
+                        
+                        case 3:
+                            System.out.println("==============================");
+                            System.out.println("Harga barang saat ini: " + hargaBarang);
+                            System.out.println("==============================");
+                            break;
+                    
+                    // case 4:
+                    //     System.out.println("Masukkan jumlah barang yang ingin dibeli:");
+                    //     int jumlahBarang = scanner.nextInt();
+                    //     System.out.println("Masukkan kode voucher");
+                    //     System.out.println("Jika tidak ada, ketik 'skip'");
+                    //     System.out.println("Jika ingin buat, ketik 'generate'");
+                    //     System.out.println("================================");
+                    //     System.out.print("Kode: ");
+                    //     String kode = scanner.next(null);
+                    //     if (kode.equals("skip")){
+                    //         saldo -= (jumlahBarang * hargaBarang);
+                    //         System.out.println("Pembelian sukses! Saldo saat ini: " + saldo);
+                    //     }
+                    //     else if (kode.equals("generate")){
+                    //         Random random = new Random();
+                    //         String voucher = String.format("010d", random.nextInt(1000000000));
+                    //         System.out.println("Voucher berhasil dibuat: " + voucher);
+                    //         System.out.println("Masukkan kode voucher");
+                    //         System.out.println("Jika tidak ada, ketik 'skip'");
+                    //         System.out.println("Jika ingin buat, ketik 'generate'");
+                    //         System.out.println("================================");
+                    //         System.out.print("Kode: ");
+                    //         String kodeVoucher = scanner.next();
+                    //         if (kodeVoucher.equals(kode)){
+                    //             double hargaSetelahDiskon = hargaBarang - 
+                    //             System.out.println("Voucher berhasil digunakan! Harga setelah diskon:");
+                    //             System.out.println("Pembelian sukses! Saldo saat ini: ");
+                    //     }
+                    //     else{
+                    //         System.out.println("Input salah");
+                    //     }
+                    //     break;
+                    
+                        case 8:
+                            pembeli = false;
+                            break;
+                        
+                        default:
+                            System.out.println("Pilihan tidak valid.");
+                            break;
                     }
                 }
-            System.out.println("Update nih");
             }
         }
         scanner.close();
@@ -128,4 +184,4 @@ public class TP01 {
 }
 
 
-
+    
