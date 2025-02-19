@@ -10,19 +10,25 @@ public class TP01 {
     static int stok;
     static double hargaBarang;
     static double saldo;
+    static String kodeVoucher = ""; // Menyimpan kode voucher terbaru
+    static double totalPengeluaran = 0; // Kita set semuanya jadi 0 dulu
+    static int jumlahTransaksi = 0;
+    static double totalPendapatan = 0;
+    static double totalDiskonDiterima = 0;
+    static double pendapatanTerbesar = 0; 
+    static double pembelianTerbesar = 0;
 
     public static void main(String[] args) {
         tampilanAwal();
         
-        // Validasi input awal
+        // Validasi input awal (tidak boleh negatif atau 0)
         stok = validasiInputInt("Masukkan stok awal: ");
         hargaBarang = validasiInputDouble("Masukkan harga barang: ");
         saldo = validasiInputDouble("Masukkan saldo awal: ");
-        
         mainMenu();
-        
         scanner.close();
-    }
+        }
+    
 
     // Tampilan awal
     public static void tampilanAwal() {
@@ -53,13 +59,6 @@ public class TP01 {
             int perintah = scanner.nextInt();
             
             switch(perintah){
-            case 4: //untuk keluar dari main menu 
-                System.out.println("\n===========================================");
-                System.out.println("Terima kasih telah menggunakan Burhanpedia!");
-                System.out.println("===========================================\n");
-                running = false; // stop while loop
-                break;
-            
             case 1: // Menu Penjual
                 menuPenjual();
                 break;
@@ -69,12 +68,17 @@ public class TP01 {
             case 3: // Menu Hari Selanjutnya
                 hariSelanjutnya();
                 break;
+            case 4: //untuk keluar dari main menu 
+                System.out.println("\n===========================================");
+                System.out.println("Terima kasih telah menggunakan Burhanpedia!");
+                System.out.println("===========================================\n");
+                running = false; // stop while loop
+                break;
             default:
                 System.out.println("Pilihan tidak valid.");
                 break;
             }
         }
-    
     }
 
     // Menu Penjual
@@ -106,11 +110,20 @@ public class TP01 {
                 case 4:
                     ubahHargaBarang();
                     break;
-                case 8:
+                case 5:
+                    generateVoucher();
+                    break;
+                // case 6:
+                //     kirimBarang();
+                //     break;
+                case 7:
+                    laporanPendapatan();
+                    break;
+                case 8: // Ke menu utama makanya kita set while jadi false
                     penjual = false;
                     break;
                 default:
-                    System.out.println("Pilihan tidak valid."); // FIXED: Tambah titik koma (;)
+                    System.out.println("Pilihan tidak valid."); 
                     break;
             }
         }
@@ -142,11 +155,23 @@ public class TP01 {
                 case 3:
                     cekHargaBarang();
                     break;
+                case 4:
+                    beliBarang();
+                    break;
+                case 5:
+                    generateVoucher();
+                    break;
+                // case 6:
+                //     kirimBarang();
+                //     break;
+                case 7:
+                    laporanPengeluaran();
+                    break;
                 case 8:
                     pembeli = false;
                     break;
                 default:
-                    System.out.println("Pilihan tidak valid."); // FIXED: Tambah titik koma (;)
+                    System.out.println("Pilihan tidak valid."); 
                     break;
             }
         }
@@ -157,7 +182,8 @@ public class TP01 {
         today = today.plusDays(1); // Tambah satu hari
         Locale indonesia = new Locale("id", "ID");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", indonesia);
-        System.out.println("\nHari selanjutnya: " + today.format(formatter));
+        System.out.println("\nTanggal : " + today.format(formatter));
+        System.out.println("Pok pok pok!");
     }
 
     // Cek stok
@@ -176,14 +202,69 @@ public class TP01 {
 
     // Tambah stok
     public static void tambahStok() {
-        stok += validasiInputInt("Masukkan jumlah stok yang ingin ditambah: ");
+        stok += validasiInputInt("Masukkan jumlah stok yang ingin ditambah: "); // Validasi input stok agar tdk negatif
         System.out.println("Stok berhasil ditambah! Stok saat ini: " + stok);
     }
 
     // Ubah harga barang
     public static void ubahHargaBarang() {
-        hargaBarang = validasiInputDouble("Masukkan harga barang yang baru: ");
+        hargaBarang = validasiInputDouble("Masukkan harga barang yang baru: "); // Validasi input agar tdk negatif
         System.out.println("Harga barang diperbarui: " + hargaBarang);
+    }
+
+    // Generate voucher
+    public static void generateVoucher() {
+        Random random = new Random();
+        String kode = ""; // String kosong utk nanti hasilnya di convert ke angka lewat konversiKodeAngka
+        for (int i=0; i<10; i++) {
+            char huruf = (char) ('A' + random.nextInt(26)); // Generate random huruf A-Z
+            kode += huruf;
+        }
+        kodeVoucher = konversiKodeKeAngka(kode);
+        System.out.println("Voucher berhasil dibuat: " + kodeVoucher); 
+    }
+
+    // Konversi kode ke angka
+    public static String konversiKodeKeAngka(String kode) {
+        String hasil = "";
+        for (int i = 0; i < kode.length(); i++) {
+            int angka = getKodeAngka(kode.charAt(i)); // Method getKodeAngka utk generate angka sesuai ketentuan soal
+            int value = (angka * (i + 1)) % 10; 
+            hasil += value;
+        }
+        return hasil;
+    }
+    // Kode 93
+    public static int getKodeAngka(char huruf) {
+        switch (huruf) {
+            case 'A': return 10;
+            case 'B': return 11;
+            case 'C': return 12;
+            case 'D': return 13;
+            case 'E': return 14;
+            case 'F': return 15;
+            case 'G': return 16;
+            case 'H': return 17;
+            case 'I': return 18;
+            case 'J': return 19;
+            case 'K': return 20;
+            case 'L': return 21;
+            case 'M': return 22;
+            case 'N': return 23;
+            case 'O': return 24;
+            case 'P': return 25;
+            case 'Q': return 26;
+            case 'R': return 27;
+            case 'S': return 28;
+            case 'T': return 29;
+            case 'U': return 30;
+            case 'V': return 31;
+            case 'W': return 32;
+            case 'X': return 33;
+            case 'Y': return 34;
+            case 'Z': return 35;
+            default: return 0;
+        }
     }
 
     // Cek saldo
@@ -197,6 +278,117 @@ public class TP01 {
     public static void topUpSaldo() {
         saldo += validasiInputDouble("Masukkan jumlah saldo yang ingin ditambah: ");
         System.out.println("Saldo berhasil ditambah! Saldo saat ini: " + saldo);
+    }
+    
+    // Beli barang
+    public static void beliBarang() {
+        int jumlah = validasiInputInt("Masukkan jumlah barang yang ingin dibeli: ");
+        // Validasi jumlah dan stok 
+        if (jumlah > stok) { // Pastikan stok lebih banyak dr jumlah yg ingin dibeli
+            System.out.println("Stok tidak mencukupi!");
+            return;
+        }
+        if (jumlah <= 0) { // Pastikan jumlah merupakan angka valid lebih dari 0
+            System.out.println("Jumlah barang tidak valid!");
+            return;
+        }
+
+        // User input voucher
+        String inputVoucher = "";
+        boolean inputValid = true;
+        while (inputValid) {
+            System.out.println("Masukkan kode voucher");
+            System.out.println("Jika tidak ada, ketik 'skip'");
+            System.out.println("Jika ingin buat, ketik 'generate'");
+            System.out.println("================================");
+            System.out.print("Kode: ");
+            inputVoucher = scanner.next();
+            
+            if (inputVoucher.equalsIgnoreCase("generate")) { // kalau user generate voucher
+                generateVoucher();
+                System.out.println("Masukkan kode voucher yang baru saja dibuat: " + kodeVoucher);
+            } 
+            else if (!inputVoucher.equalsIgnoreCase("skip") && !inputVoucher.equals(kodeVoucher)) {
+                System.out.println("Kode voucher tidak valid!"); // Kalau tidak skip tapi voucher tidak sesuai dgn yg udah dibuat sblmnya
+            } else { 
+                inputValid = false; // Keluar dr loop
+            }
+        }
+        double diskon = 0;
+        if (!inputVoucher.equalsIgnoreCase("skip") && inputVoucher.equals(kodeVoucher)) {
+            diskon = hitungDiskon(kodeVoucher); // Kalau skip dan ternyata kode voucher sesuai, hitung diskon
+        }
+
+        // Hitung harga setelah diskon
+        double hargaSetelahDiskon = hargaBarang * jumlah * (1 - diskon / 100);
+
+        // Hitung pajak 3% setelah diskon
+        double pajak = hargaSetelahDiskon * 0.03; // Pertama hitung dulu pajaknya brp
+        double totalHarga = hargaSetelahDiskon + pajak; // Baru tambahin harga setelah diskon + pajak
+
+        // Cek saldo
+        if (saldo >= totalHarga) { // Pastikan saldo lebih besar daripada total harganya yg sudah kita hitung including pajak
+            saldo -= totalHarga; // Saldo dikurang total harga
+            stok -= jumlah; // Stok dikurang dgn jumlah yang kita beli
+            totalPengeluaran += totalHarga; // Total pengeluaran kita tambahkan total harga yang barusan di purchase
+            jumlahTransaksi++; // Jumlah transaksi bertambah
+            totalPendapatan += totalHarga; // Total pendapatan kita tambahkan dengan total harga yang barusan di purchase
+            totalDiskonDiterima += hargaBarang * jumlah * (diskon / 100); // Total diskon diterima
+            if (totalHarga > pendapatanTerbesar) pendapatanTerbesar = totalHarga; // Untuk mendapatkan pendapatan terbesar
+            if (totalHarga > pembelianTerbesar) pembelianTerbesar = totalHarga; // Untuk mendapatkan pembelian terbesar
+            System.out.printf("Voucher berhasil digunakan! Harga setelah diskon: %.2f\n", totalHarga);
+            System.out.printf("Pembelian sukses! Saldo saat ini: %.2f\n", saldo);
+            }       
+        else {
+            System.out.println("Saldo tidak cukup.");
+        }
+    }
+
+    // Hitung diskon (rekursif)
+    public static int hitungDiskon(String kode) {
+        if (kode.isEmpty()) {
+            return 0; // Kalau kode kosong kembalikan 0 biar tidak error
+        }
+        if (kode.length() == 1) {
+            return Character.getNumericValue(kode.charAt(0));
+        }
+        // Ambil digit pertama dan terakhir
+        int depan = Character.getNumericValue(kode.charAt(0)); // Ambil digit pertama
+        int belakang = Character.getNumericValue(kode.charAt(kode.length() - 1)); // Ambil digit terakhir
+
+        // Hitung hasil perkalian 
+        int hasil = depan * belakang;
+
+        // Rekursif 
+        return hasil + hitungDiskon(kode.substring(1, kode.length() - 1));
+    }
+
+    // Laporan pendapatan
+    public static void laporanPendapatan() {
+        System.out.println("==============================");
+        System.out.println("LAPORAN PENDAPATAN");
+        System.out.println("------------------------------");
+        System.out.printf("Total Pendapatan: %.2f\n", totalPendapatan);
+        System.out.printf("Jumlah Transaksi: %d\n", jumlahTransaksi);
+        double rataRataPendapatan = totalPendapatan / jumlahTransaksi;
+        System.out.printf("Rata-rata Pendapatan: %.2f\n", rataRataPendapatan);
+        System.out.printf("Total Diskon Diberikan: %.2f\n", totalDiskonDiterima);
+        System.out.printf("Pendapatan Terbesar: %.2f\n", pendapatanTerbesar);
+        System.out.println("==============================");
+    }
+
+    // Laporan pengeluaran
+    public static void laporanPengeluaran() {
+        System.out.println("==============================");
+        System.out.println("LAPORAN PENGELUARAN");
+        System.out.println("------------------------------");
+        System.out.printf("Total Pengeluaran: %.2f\n", totalPengeluaran);
+        System.out.printf("Jumlah Transaksi: %d\n", jumlahTransaksi);
+        double rataRataPengeluaran = totalPengeluaran / jumlahTransaksi;
+        System.out.printf("Rata-rata Pengeluaran: %.2f\n", rataRataPengeluaran);
+        System.out.printf("Total Diskon Diterima: %.2f\n", totalDiskonDiterima);
+        System.out.printf("Pembelian Terbesar: %.2f\n", pembelianTerbesar);
+        System.out.println("==============================");
     }
 
     // Validasi input integer
@@ -223,5 +415,5 @@ public class TP01 {
             }
         } while (input <= 0);
         return input;
-    }
+    }   
 }
